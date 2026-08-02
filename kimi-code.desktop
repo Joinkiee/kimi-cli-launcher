@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Kimi Code
+Comment=AI coding assistant in your terminal
+Exec=xfce4-terminal --title="Kimi Code" --command="/home/USER/.kimi-code/bin/kimi"
+Icon=/home/USER/.local/share/icons/kimi.png
+Type=Application
+Categories=Development;
+Terminal=false
+StartupNotify=true
