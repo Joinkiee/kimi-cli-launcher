@@ -1,7 +1,6 @@
 # Kimi Code Launcher
 
-This project adds Kimi Code CLI to the applications menu on Linux.
-It is made for Linux Mint. It can work on other Linux desktops too.
+Adds Kimi Code CLI to the applications menu on Linux. Made for Linux Mint.
 
 ## What it does
 
