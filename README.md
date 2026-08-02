@@ -12,8 +12,8 @@ Adds Kimi Code CLI to the applications menu on Linux. Made for Linux Mint.
 ## Requirements
 
 - Linux. Linux Mint is the main target. Mint 22.x is tested.
-- Kimi Code CLI installed at `~/.kimi-code/bin/kimi`.
 - The `xfce4-terminal` program. Mint Xfce has it by default.
+- Kimi Code CLI. The script can install it for you. See the next section.
 
 ## Install
 
@@ -25,6 +25,11 @@ Do these steps:
 4. Open your applications menu.
 5. Type "Kimi" in the search field.
 6. Click "Kimi Code".
+
+The script checks for Kimi Code CLI first. If the CLI is missing, the script tells you.
+It then asks before it installs anything. Answer `y` to install, or `n` to skip.
+The script downloads the CLI from the official Kimi site only:
+`https://code.kimi.com/kimi-code/install.sh`. It uses no other source.
 
 The script copies two files:
 
