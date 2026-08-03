@@ -1,7 +1,7 @@
 # Install the Kimi Code Start Menu shortcut for the current user.
 $ErrorActionPreference = "Stop"
 
-Set-Location $PSScriptRoot
+$scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Get-Location }
 
 $kimiExe = Join-Path $env:USERPROFILE ".kimi-code\bin\kimi.exe"
 $kimiInstallUrl = "https://code.kimi.com/kimi-code/install.ps1"
@@ -17,21 +17,27 @@ if (-not (Test-Path $kimiExe)) {
     } else {
         Write-Host "Skipped. The shortcut needs Kimi Code CLI to work."
     }
+    if (-not (Test-Path $kimiExe)) {
+        Write-Host "Warning: Kimi Code CLI is still missing at $kimiExe."
+        Write-Host "The shortcut is created anyway, but it will not work until the CLI is installed."
+    }
 }
 
 # Step 2: copy the icon to a stable location.
 $iconDir = Join-Path $env:LOCALAPPDATA "kimi-code-launcher"
 New-Item -ItemType Directory -Force $iconDir | Out-Null
 $iconPath = Join-Path $iconDir "kimi.ico"
-Copy-Item "kimi.ico" $iconPath -Force
+Copy-Item (Join-Path $scriptDir "kimi.ico") $iconPath -Force
 
 # Step 3: create the Start Menu shortcut.
 $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
 $shortcutPath = Join-Path $startMenu "Kimi Code.lnk"
 
 # Prefer Windows Terminal; fall back to the classic console host.
+# Test-Path on the wt.exe alias is not enough: the stub can exist without the app.
+$wtInstalled = $null -ne (Get-AppxPackage -Name Microsoft.WindowsTerminal -ErrorAction SilentlyContinue)
 $wt = Join-Path $env:LOCALAPPDATA "Microsoft\WindowsApps\wt.exe"
-if (Test-Path $wt) {
+if ($wtInstalled -and (Test-Path $wt)) {
     $target = $wt
     $arguments = "--title `"Kimi Code`" `"$kimiExe`""
 } else {
