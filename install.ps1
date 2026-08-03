@@ -31,7 +31,13 @@ Copy-Item (Join-Path $scriptDir "kimi.ico") $iconPath -Force
 
 # Step 3: create the Start Menu shortcut.
 $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
-$shortcutPath = Join-Path $startMenu "Kimi Code.lnk"
+$shortcutPath = Join-Path $startMenu "Kimi CLI.lnk"
+
+# Remove the old entry from before the rename.
+$oldShortcutPath = Join-Path $startMenu "Kimi Code.lnk"
+if (Test-Path $oldShortcutPath) {
+    Remove-Item $oldShortcutPath -Force
+}
 
 # Prefer Windows Terminal; fall back to the classic console host.
 # Test-Path on the wt.exe alias is not enough: the stub can exist without the app.
@@ -39,7 +45,7 @@ $wtInstalled = $null -ne (Get-AppxPackage -Name Microsoft.WindowsTerminal -Error
 $wt = Join-Path $env:LOCALAPPDATA "Microsoft\WindowsApps\wt.exe"
 if ($wtInstalled -and (Test-Path $wt)) {
     $target = $wt
-    $arguments = "--title `"Kimi Code`" `"$kimiExe`""
+    $arguments = "--title `"Kimi CLI`" `"$kimiExe`""
 } else {
     $target = Join-Path $env:SystemRoot "System32\cmd.exe"
     $arguments = "/k `"$kimiExe`""
@@ -54,4 +60,4 @@ $shortcut.Description = "AI coding assistant in your terminal"
 $shortcut.WorkingDirectory = $env:USERPROFILE
 $shortcut.Save()
 
-Write-Host "Done. Look for 'Kimi Code' in your Start Menu."
+Write-Host "Done. Look for 'Kimi CLI' in your Start Menu."

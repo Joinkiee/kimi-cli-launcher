@@ -5,7 +5,7 @@ Made for Linux Mint and Windows 10/11.
 
 ## What it does
 
-- It puts "Kimi Code" in your applications menu or Start Menu.
+- It puts "Kimi CLI" in your applications menu or Start Menu.
 - It opens a terminal when you click the menu entry.
 - It starts Kimi Code CLI in that terminal.
 - It shows the Kimi "K" icon in the menu.
@@ -26,7 +26,7 @@ Do these steps:
 3. Run `./install.sh`.
 4. Open your applications menu.
 5. Type "Kimi" in the search field.
-6. Click "Kimi Code".
+6. Click "Kimi CLI".
 
 The script checks for Kimi Code CLI first. If the CLI is missing, the script tells you.
 It then asks before it installs anything. Answer `y` to install, or `n` to skip.
@@ -49,7 +49,7 @@ Do these steps:
 3. Run `powershell -ExecutionPolicy Bypass -File install.ps1`.
 4. Open the Start Menu.
 5. Type "Kimi" in the search field.
-6. Click "Kimi Code".
+6. Click "Kimi CLI".
 
 The script checks for Kimi Code CLI first. If the CLI is missing, the script tells you.
 It then asks before it installs anything. Answer `y` to install, or `n` to skip.
@@ -59,7 +59,7 @@ The script downloads the CLI from the official Kimi site only:
 The script copies one file and makes one shortcut:
 
 - `kimi.ico` goes to `%LOCALAPPDATA%\kimi-code-launcher\`.
-- `Kimi Code.lnk` goes to the Start Menu Programs folder.
+- `Kimi CLI.lnk` goes to the Start Menu Programs folder.
 
 The shortcut opens Windows Terminal. If Windows Terminal is missing, it uses `cmd.exe`.
 
@@ -95,7 +95,7 @@ Do these steps:
 
 Do these steps:
 
-1. Remove `Kimi Code.lnk` from the Start Menu Programs folder.
+1. Remove `Kimi CLI.lnk` from the Start Menu Programs folder.
 2. Remove the `%LOCALAPPDATA%\kimi-code-launcher\` folder.
 
 ## Files
