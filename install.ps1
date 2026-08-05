@@ -29,35 +29,66 @@ New-Item -ItemType Directory -Force $iconDir | Out-Null
 $iconPath = Join-Path $iconDir "kimi.ico"
 Copy-Item (Join-Path $scriptDir "kimi.ico") $iconPath -Force
 
+# Also install the mode launcher and updater used by the shortcuts and the context menu.
+$launcherPath = Join-Path $iconDir "kimi-launch.cmd"
+Copy-Item (Join-Path $scriptDir "kimi-launch.cmd") $launcherPath -Force
+Copy-Item (Join-Path $scriptDir "update-kimi.ps1") (Join-Path $iconDir "update-kimi.ps1") -Force
+
 # Step 3: create the Start Menu shortcut.
 $startMenu = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
 $shortcutPath = Join-Path $startMenu "Kimi CLI.lnk"
 
-# Remove the old entry from before the rename.
-$oldShortcutPath = Join-Path $startMenu "Kimi Code.lnk"
-if (Test-Path $oldShortcutPath) {
-    Remove-Item $oldShortcutPath -Force
+# Remove old entries: the pre-rename one and the split-out mode shortcut
+# (modes are now picked from a menu inside the single "Kimi CLI" entry).
+$oldShortcutPaths = @(
+    (Join-Path $startMenu "Kimi Code.lnk"),
+    (Join-Path $startMenu "Kimi CLI (Auto + K3 Max).lnk")
+)
+foreach ($oldShortcutPath in $oldShortcutPaths) {
+    if (Test-Path $oldShortcutPath) {
+        Remove-Item $oldShortcutPath -Force
+    }
 }
 
-# Prefer Windows Terminal; fall back to the classic console host.
-# Test-Path on the wt.exe alias is not enough: the stub can exist without the app.
-$wtInstalled = $null -ne (Get-AppxPackage -Name Microsoft.WindowsTerminal -ErrorAction SilentlyContinue)
-$wt = Join-Path $env:LOCALAPPDATA "Microsoft\WindowsApps\wt.exe"
-if ($wtInstalled -and (Test-Path $wt)) {
-    $target = $wt
-    $arguments = "--title `"Kimi CLI`" `"$kimiExe`""
-} else {
-    $target = Join-Path $env:SystemRoot "System32\cmd.exe"
-    $arguments = "/k `"$kimiExe`""
-}
-
+# The single shortcut goes through kimi-launch.cmd with no mode, so it shows the
+# mode menu, checks for CLI updates, asks new vs. previous chat, and picks the
+# terminal (wt.exe or cmd.exe).
 $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($shortcutPath)
-$shortcut.TargetPath = $target
-$shortcut.Arguments = $arguments
+$shortcut.TargetPath = $launcherPath
+$shortcut.Arguments = ""
 $shortcut.IconLocation = $iconPath
 $shortcut.Description = "AI coding assistant in your terminal"
 $shortcut.WorkingDirectory = $env:USERPROFILE
 $shortcut.Save()
 
-Write-Host "Done. Look for 'Kimi CLI' in your Start Menu."
+# Step 4: right-click context menu for folders (current user only, no admin needed).
+$menuRoots = @(
+    "HKCU:\Software\Classes\Directory\Background\shell\KimiCLI",
+    "HKCU:\Software\Classes\Directory\shell\KimiCLI"
+)
+$menuEntries = @(
+    @{ Key = "1AutoMax"; Label = "Auto + K3 Max (1M)";    Mode = "auto-max" },
+    @{ Key = "2Auto";    Label = "Auto (default model)";  Mode = "auto" },
+    @{ Key = "3Yolo";    Label = "Yolo (skip approvals)"; Mode = "yolo" },
+    @{ Key = "4Plan";    Label = "Plan mode";             Mode = "plan" },
+    @{ Key = "5Manual";  Label = "Manual (default)";      Mode = "manual" }
+)
+foreach ($root in $menuRoots) {
+    if (Test-Path $root) { Remove-Item $root -Recurse -Force }
+    New-Item -Path $root -Force | Out-Null
+    Set-ItemProperty -Path $root -Name "MUIVerb" -Value "Kimi CLI"
+    Set-ItemProperty -Path $root -Name "Icon" -Value $iconPath
+    Set-ItemProperty -Path $root -Name "SubCommands" -Value ""
+    foreach ($entry in $menuEntries) {
+        $sub = Join-Path $root ("shell\" + $entry.Key)
+        New-Item -Path "$sub\command" -Force | Out-Null
+        Set-ItemProperty -Path $sub -Name "MUIVerb" -Value $entry.Label
+        Set-ItemProperty -Path $sub -Name "Icon" -Value $iconPath
+        Set-ItemProperty -Path "$sub\command" -Name "(Default)" -Value ('"' + $launcherPath + '" ' + $entry.Mode + ' "%V"')
+    }
+}
+
+Write-Host "Done. Look for 'Kimi CLI' in your Start Menu - it asks which mode to use on launch."
+Write-Host "Right-click inside a folder (or on a folder) to find the 'Kimi CLI' submenu."
+Write-Host "Every launch checks for a Kimi CLI update and asks new chat vs. previous chats."
