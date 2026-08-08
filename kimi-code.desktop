@@ -1,9 +1,10 @@
 [Desktop Entry]
 Name=Kimi CLI
 Comment=AI coding assistant in your terminal
-Exec=xfce4-terminal --title="Kimi CLI" --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh"
+Exec=xfce4-terminal --title="Kimi CLI" --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh menu %f"
 Icon=/home/USER/.local/share/icons/kimi.png
 Type=Application
 Categories=Development;
+MimeType=inode/directory;
 Terminal=false
 StartupNotify=true

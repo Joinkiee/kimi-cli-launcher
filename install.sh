@@ -44,8 +44,21 @@ if command -v thunar >/dev/null; then
     mkdir -p "$HOME/.config/Thunar"
     UCA_BLOCK=$(sed -e "s|/home/USER|$HOME|g" kimi-uca.xml)
     if [ -f "$UCA_FILE" ]; then
-        # Drop any previous Kimi block, then insert the fresh one.
-        sed -i '/<!-- KIMI-CLI-START -->/,/<!-- KIMI-CLI-END -->/d' "$UCA_FILE"
+        # Drop any previous Kimi actions (matched by their unique-id prefix),
+        # then insert the fresh one. Thunar strips XML comments when it
+        # rewrites uca.xml, so marker comments are not enough.
+        awk '
+            /^<action>$/ { buf=$0; inact=1; next }
+            inact {
+                buf = buf "\n" $0
+                if ($0 ~ /<\/action>/) {
+                    if (buf !~ /<unique-id>kimi-cli-/) print buf
+                    inact=0; buf=""
+                }
+                next
+            }
+            { print }
+        ' "$UCA_FILE" > "$UCA_FILE.tmp" && mv "$UCA_FILE.tmp" "$UCA_FILE"
         awk -v block="$UCA_BLOCK" '/<\/actions>/ && !done {print block; done=1} {print}' \
             "$UCA_FILE" > "$UCA_FILE.tmp" && mv "$UCA_FILE.tmp" "$UCA_FILE"
     else

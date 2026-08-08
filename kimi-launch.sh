@@ -13,7 +13,8 @@
 
 VERSION="2.0.0"
 MODE="${1:-menu}"
-DIR="${2:-$PWD}"
+[ $# -gt 0 ] && shift
+DIR="${*:-$PWD}"
 KIMI="$HOME/.kimi-code/bin/kimi"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 

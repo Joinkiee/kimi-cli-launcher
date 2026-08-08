@@ -27,9 +27,10 @@ Made for Linux Mint and Windows 10/11.
   same five modes as above, pre-selected so only the chat prompt is shown.
   On Windows 11 the submenu lives in the classic context menu: right-click and
   choose "Show more options" (or press Shift+F10) to see it.
-- Linux only: adds a "Kimi CLI" right-click submenu in Thunar. Right-click a
-  folder (or empty space inside one) and pick a mode directly — the same five
-  modes as above, pre-selected so only the chat prompt is shown.
+- Linux only: adds "Kimi CLI" to Thunar in two places. It shows in the
+  right-click menu (also for empty space inside a folder) and under
+  "Open With" for folders. Both open Kimi CLI in that folder, then show
+  the mode menu.
 
 ## Requirements
 
@@ -66,7 +67,7 @@ To skip the mode menu, pass a mode to the launcher:
   `~/.local/share/icons/kimi.png`, and `~/.local/share/kimi-cli-launcher/`,
   then run `update-desktop-database ~/.local/share/applications/`.
   To remove the right-click menu, open `~/.config/Thunar/uca.xml` and delete
-  the block between `<!-- KIMI-CLI-START -->` and `<!-- KIMI-CLI-END -->`.
+  the `<action>` entry whose `<unique-id>` is `kimi-cli-launcher`.
 - Windows: remove `Kimi CLI.lnk` from the Start Menu Programs folder and the
   `%LOCALAPPDATA%\kimi-code-launcher\` folder.
   To remove the right-click menu, delete these two registry keys (e.g. in Registry
@@ -77,8 +78,8 @@ To skip the mode menu, pass a mode to the launcher:
 ## Files
 
 - `install.sh` and `kimi-code.desktop` — the Linux installer and menu entry.
-- `kimi-uca.xml` — the Thunar right-click actions. The installer merges them
-  into `~/.config/Thunar/uca.xml` and leaves other entries alone.
+- `kimi-uca.xml` — the Thunar right-click action. The installer merges it into
+  `~/.config/Thunar/uca.xml` and leaves other entries alone.
 - `kimi-launch.sh` — Linux mode launcher; checks for updates, shows the mode
   menu (unless a mode was passed), asks new vs. previous chat, and starts the CLI.
 - `update-kimi.sh` — Linux updater; compares the installed CLI version against
