@@ -38,5 +38,24 @@ chmod +x "$HOME/.local/share/applications/kimi-code.desktop"
 
 update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
 
+# Step 3: Thunar right-click menu (custom actions), idempotent.
+UCA_FILE="$HOME/.config/Thunar/uca.xml"
+if command -v thunar >/dev/null; then
+    mkdir -p "$HOME/.config/Thunar"
+    UCA_BLOCK=$(sed -e "s|/home/USER|$HOME|g" kimi-uca.xml)
+    if [ -f "$UCA_FILE" ]; then
+        # Drop any previous Kimi block, then insert the fresh one.
+        sed -i '/<!-- KIMI-CLI-START -->/,/<!-- KIMI-CLI-END -->/d' "$UCA_FILE"
+        awk -v block="$UCA_BLOCK" '/<\/actions>/ && !done {print block; done=1} {print}' \
+            "$UCA_FILE" > "$UCA_FILE.tmp" && mv "$UCA_FILE.tmp" "$UCA_FILE"
+    else
+        printf '<?xml version="1.0" encoding="UTF-8"?>\n<actions>\n%s</actions>\n' \
+            "$UCA_BLOCK" > "$UCA_FILE"
+    fi
+    # Make Thunar reload its custom actions.
+    thunar -q 2>/dev/null || true
+fi
+
 echo "Done. Look for 'Kimi CLI' in your applications menu."
 echo "Every launch checks for a Kimi CLI update and asks which mode to use."
+echo "Right-click a folder (or inside one) in Thunar for the 'Kimi CLI' submenu."

@@ -1,0 +1,57 @@
+<!-- KIMI-CLI-START -->
+<action>
+	<icon>/home/USER/.local/share/icons/kimi.png</icon>
+	<name>Auto + K3 Max (1M)</name>
+	<submenu>Kimi CLI</submenu>
+	<unique-id>kimi-cli-auto-max</unique-id>
+	<command>xfce4-terminal --title="Kimi CLI" --working-directory=%f --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh auto-max"</command>
+	<description>Open Kimi CLI here: auto mode, K3 1M context, max thinking</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>/home/USER/.local/share/icons/kimi.png</icon>
+	<name>Auto (default model)</name>
+	<submenu>Kimi CLI</submenu>
+	<unique-id>kimi-cli-auto</unique-id>
+	<command>xfce4-terminal --title="Kimi CLI" --working-directory=%f --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh auto"</command>
+	<description>Open Kimi CLI here: fully autonomous, never asks</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>/home/USER/.local/share/icons/kimi.png</icon>
+	<name>Yolo (skip approvals)</name>
+	<submenu>Kimi CLI</submenu>
+	<unique-id>kimi-cli-yolo</unique-id>
+	<command>xfce4-terminal --title="Kimi CLI" --working-directory=%f --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh yolo"</command>
+	<description>Open Kimi CLI here: auto-approve tools, may still ask</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>/home/USER/.local/share/icons/kimi.png</icon>
+	<name>Plan mode</name>
+	<submenu>Kimi CLI</submenu>
+	<unique-id>kimi-cli-plan</unique-id>
+	<command>xfce4-terminal --title="Kimi CLI" --working-directory=%f --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh plan"</command>
+	<description>Open Kimi CLI here: plan first, execute after approval</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>/home/USER/.local/share/icons/kimi.png</icon>
+	<name>Manual (default)</name>
+	<submenu>Kimi CLI</submenu>
+	<unique-id>kimi-cli-manual</unique-id>
+	<command>xfce4-terminal --title="Kimi CLI" --working-directory=%f --command="/home/USER/.local/share/kimi-cli-launcher/kimi-launch.sh manual"</command>
+	<description>Open Kimi CLI here: confirm every tool</description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<!-- KIMI-CLI-END -->
